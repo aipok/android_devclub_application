@@ -31,8 +31,7 @@ public class FeedListFragment extends Fragment {
     private LoadingView loadingView;
     private ItemsAdapter adapter;
 
-    public FeedListFragment() {
-    }
+    public FeedListFragment() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,6 +108,7 @@ public class FeedListFragment extends Fragment {
                 Holder holder = new Holder();
                 holder.titleView = (TextView) convertView.findViewById(R.id.title);
                 holder.descriptionView = (TextView) convertView.findViewById(R.id.description);
+                holder.separatorView = convertView.findViewById(R.id.separator);
                 convertView.setTag(holder);
             }
             final Holder holder = (Holder) convertView.getTag();
@@ -120,6 +120,11 @@ public class FeedListFragment extends Fragment {
                 holder.descriptionView.setText(TextUtils.isEmpty(model.description)? null: model.description);
                 holder.descriptionView.setVisibility(TextUtils.isEmpty(model.description)? View.GONE: View.VISIBLE);
             }
+            holder.separatorView.setVisibility(
+                holder.titleView.getVisibility() == View.VISIBLE
+             && holder.descriptionView.getVisibility() == View.VISIBLE
+                    ? View.VISIBLE: View.GONE);
+
             return convertView;
         }
     }
@@ -127,5 +132,6 @@ public class FeedListFragment extends Fragment {
     private class Holder{
         TextView titleView;
         TextView descriptionView;
+        View separatorView;
     }
 }
