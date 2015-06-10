@@ -1,0 +1,23 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        app:theme="@style/AppTheme.ActionBar"
+        android:background="@drawable/action_bar_bg"
+        app:titleTextAppearance="@style/AppTheme.TitleStyle" />
+
+    <fragment
+        android:id="@+id/fragment"
+        android:name="com.divapps.aipok.devclub.FeedListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?actionBarSize"
+        tools:layout="@layout/fragment_main" />
+</merge>
+

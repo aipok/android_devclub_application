@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <bitmap
+            android:src="@drawable/tile"
+            android:tileMode="repeat" />
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <size android:height="20dp" />
+            <gradient
+                android:centerColor="#44FFFFFF"
+                android:endColor="#11FFFFFF"
+                android:startColor="#11FFFFFF"
+                android:type="linear" />
+        </shape>
+    </item>
+</layer-list>

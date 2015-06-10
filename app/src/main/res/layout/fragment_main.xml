@@ -1,0 +1,28 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivityFragment">
+
+    <com.divapps.aipok.devclub.views.LoadingView
+        android:id="@+id/loading_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <GridView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:drawSelectorOnTop="true"
+        android:listSelector="@android:color/transparent"
+        android:overScrollMode="never"
+        android:paddingTop="@dimen/collection_vertical_padding"
+        android:paddingBottom="@dimen/collection_vertical_padding"
+        android:paddingLeft="@dimen/collection_horizontal_padding"
+        android:paddingRight="@dimen/collection_horizontal_padding"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbarThumbVertical="@drawable/scrollbar"
+        android:visibility="gone" />
+</FrameLayout>
