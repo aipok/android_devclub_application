@@ -1,6 +1,7 @@
 package com.divapps.aipok.devclub;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -120,7 +121,10 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
     public void onClick(View v) {
         if(v.getId() == R.id.play){
             final ItemModel model = adapter.getItem((Integer) v.getTag());
-            Log.d(TAG, "Play button clicked and movie: "+model.mediaUrl+" will be started soon");
+            Intent intent = new Intent(getActivity(), Player.class);
+            intent.putExtra(Player.URL_TAG, model.mediaUrl);
+            startActivity(intent);
+            Log.d(TAG, "Play button clicked and movie: " + model.mediaUrl + " will be started soon");
         }
     }
 
