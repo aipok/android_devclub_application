@@ -3,4 +3,5 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_reload">Update feeds</string>
     <string name="loading_title">Please wait…</string>
+    <string name="description" translatable="false" />
 </resources>

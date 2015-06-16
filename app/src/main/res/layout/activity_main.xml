@@ -8,8 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
-        app:theme="@style/AppTheme.ActionBar"
         android:background="@drawable/action_bar_bg"
+        app:theme="@style/AppTheme.ActionBar"
         app:titleTextAppearance="@style/AppTheme.TitleStyle" />
 
     <fragment

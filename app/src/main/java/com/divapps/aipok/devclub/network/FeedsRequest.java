@@ -13,8 +13,8 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.divapps.aipok.devclub.BuildConfig;
-import com.divapps.aipok.devclub.models.ItemModel;
 import com.divapps.aipok.devclub.models.FeedsResponseModel;
+import com.divapps.aipok.devclub.models.ItemModel;
 import com.divapps.aipok.devclub.network.additional.NoRetryPolicy;
 
 import org.xml.sax.SAXException;
@@ -33,6 +33,7 @@ import javax.xml.xpath.XPathExpressionException;
 public class FeedsRequest extends Request<FeedsResponseModel> {
 
 	public static final String TAG = FeedsRequest.class.getSimpleName();
+	private static final boolean LOG_ENABLED = false;
 
 	private final Map<String, String> headers;
 	private final Listener<FeedsResponseModel> listener;
@@ -41,10 +42,15 @@ public class FeedsRequest extends Request<FeedsResponseModel> {
 	public static final String URL = "http://feeds.feedburner.com/tedtalks_video";
 	public static final String EMPTY = "";
 
-	private static final String ITEM = "item";
-	private static final String TITLE = "title";
-	private static final String DESCRIPTION = "description";
-	private static final String PUBLICATION_DATE = "pubDate";
+	private static final String TAG_ITEM = "item";
+	private static final String TAG_TITLE = "title";
+	private static final String TAG_SUMMARY = "itunes:summary";
+	private static final String TAG_PUBLICATION_DATE = "pubDate";
+	private static final String TAG_DURATION = "itunes:duration";
+	private static final String TAG_CONTENT = "media:content";
+	private static final String TAG_IMAGE = "itunes:image";
+	private static final String TAG_URL = "url";
+	private static final String TAG_HREF = "href";
 
 	String N = EMPTY;
 	ItemModel tempItem;
@@ -55,9 +61,10 @@ public class FeedsRequest extends Request<FeedsResponseModel> {
 	
 	public FeedsRequest(int method, String url, Map<String, String> headers, Listener<FeedsResponseModel> responseListener, ErrorListener errorListener) {
 		super(method, url, errorListener);
+		if(responseObject == null) responseObject = new FeedsResponseModel();
 		this.listener = responseListener;
 		this.headers = headers;
-		setRetryPolicy(new NoRetryPolicy());
+		setRetryPolicy(new NoRetryPolicy(15000));
 	}
 
 	@Override
@@ -68,6 +75,7 @@ public class FeedsRequest extends Request<FeedsResponseModel> {
 	@Override
 	protected Response<FeedsResponseModel> parseNetworkResponse(NetworkResponse response) {
 		try {
+			parseResponse(response.data);
 			if(responseObject != null)
 				return Response.success(responseObject, HttpHeaderParser.parseCacheHeaders(response));
 			else
@@ -98,24 +106,33 @@ public class FeedsRequest extends Request<FeedsResponseModel> {
 			switch (xpp.getEventType()) {
 				// start of the document
 				case XmlPullParser.START_DOCUMENT:
-					if(BuildConfig.DEBUG)
+					if(BuildConfig.DEBUG && LOG_ENABLED)
 						Log.d(TAG, "START_DOCUMENT");
 					break;
 				// start of the tag
 				case XmlPullParser.START_TAG:
 					N = xpp.getName();
-					if(BuildConfig.DEBUG)
+					if(BuildConfig.DEBUG && LOG_ENABLED)
 						Log.d(TAG, "START_TAG: name = " + xpp.getName() + ", depth = " + xpp.getDepth() + ", attrCount = " + xpp.getAttributeCount());
-					tmp = EMPTY;
-					if(ITEM.equals(N))
+					if (tempItem == null && TAG_IMAGE.equals(N)) {
+						responseObject.coverImage = xpp.getAttributeValue(null, TAG_HREF);
+						break;
+					}
+					if (TAG_ITEM.equals(N))
 						tempItem = new ItemModel();
+					else if (TAG_IMAGE.equals(N))
+						tempItem.imageUrl = xpp.getAttributeValue(null, TAG_HREF);
+					else if (TAG_CONTENT.equals(N))
+						tempItem.mediaUrl = xpp.getAttributeValue(null, TAG_URL);
+
+
 
 					break;
 				// end of the tag
 				case XmlPullParser.END_TAG:
-					if(BuildConfig.DEBUG)
+					if(BuildConfig.DEBUG && LOG_ENABLED)
 						Log.d(TAG, "END_TAG: name = " + xpp.getName());
-					if(ITEM.equals(xpp.getName())){
+					if(TAG_ITEM.equals(xpp.getName())){
 						responseObject.items.add(tempItem);
 						tempItem = null;
 					}
@@ -124,19 +141,21 @@ public class FeedsRequest extends Request<FeedsResponseModel> {
 				// content of the tag
 				case XmlPullParser.TEXT:
 					tmp = xpp.getText();
-					if (BuildConfig.DEBUG && !TextUtils.isEmpty(tmp))
+					if (BuildConfig.DEBUG && LOG_ENABLED && !TextUtils.isEmpty(tmp))
 						Log.d(TAG, "text = " + tmp);
 					if(tempItem != null) {
-						if (TITLE.equals(N))
+						if (TAG_TITLE.equals(N))
 							tempItem.title = tmp;
-						else if (DESCRIPTION.equals(N))
-							tempItem.description = tmp;
-						else if (PUBLICATION_DATE.equals(N))
+						else if (TAG_SUMMARY.equals(N))
+							tempItem.summary = tmp;
+						else if (TAG_PUBLICATION_DATE.equals(N))
 							tempItem.publicationDate = tmp;
+						else if (TAG_DURATION.equals(N))
+							tempItem.duration = tmp;
 					}else{
-						if (TITLE.equals(N))
+						if (TAG_TITLE.equals(N))
 							responseObject.title = tmp;
-						else if (DESCRIPTION.equals(N))
+						else if (TAG_SUMMARY.equals(N))
 							responseObject.description = tmp;
 					}
 					break;

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,8 +20,19 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-        if(ab != null)
+        if(ab != null) {
             ab.setTitle(null);
+//            Drawable drawable;
+//            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+//                drawable = getResources().getDrawable(R.drawable.action_bar_bg, getTheme());
+//            else
+//                drawable = getResources().getDrawable(R.drawable.action_bar_bg);
+//            if(drawable != null) {
+//                Drawable dr = drawable.mutate();
+//                dr.setAlpha(150);
+//                ab.setBackgroundDrawable(dr);
+//            }
+        }
     }
 
     @Override

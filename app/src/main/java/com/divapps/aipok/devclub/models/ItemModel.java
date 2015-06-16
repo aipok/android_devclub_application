@@ -6,7 +6,9 @@ package com.divapps.aipok.devclub.models;
  */
 public class ItemModel {
     public String title;
-    public String link;
     public String publicationDate;
-    public String description;
+    public String summary;
+    public String duration;
+    public String mediaUrl;
+    public String imageUrl;
 }

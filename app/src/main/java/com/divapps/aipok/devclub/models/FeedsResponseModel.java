@@ -11,6 +11,7 @@ public class FeedsResponseModel {
 
     public String title;
     public String description;
+    public String coverImage;
     public final List<ItemModel> items;
 
     public FeedsResponseModel(){

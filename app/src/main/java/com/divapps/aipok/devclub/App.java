@@ -5,7 +5,9 @@ import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.divapps.aipok.devclub.network.cache.LruBitmapCache;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -21,20 +23,38 @@ public class App extends Application {
     /**
      * Application request pool for Volley requests.
      */
-    private static RequestQueue queue;
+    private RequestQueue queue;
+
+    /**
+     * Image loader application instance.
+     */
+    private ImageLoader imageLoader;
+    public static ImageLoader getLoader(){
+        return app().imageLoader;
+    }
+
+
+    private static App app;
+    public static App app(){
+        return app;
+    }
+
 
     /**
      * Getter for application request pool.
      */
     public static RequestQueue getApplicationQueue() {
-        return queue;
+        return app().queue;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        app = this;
         appContext = getApplicationContext();
         queue = Volley.newRequestQueue(getApplicationContext());
+
+        imageLoader = new ImageLoader(queue, new LruBitmapCache(LruBitmapCache.getCacheSize(appContext)));
 
         setDefaultVerifier();
     }

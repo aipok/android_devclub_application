@@ -12,12 +12,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.divapps.aipok.devclub.models.ItemModel;
+import com.android.volley.toolbox.NetworkImageView;
 import com.divapps.aipok.devclub.models.FeedsResponseModel;
+import com.divapps.aipok.devclub.models.ItemModel;
 import com.divapps.aipok.devclub.network.FeedsRequest;
 import com.divapps.aipok.devclub.views.LoadingView;
 
@@ -25,7 +27,7 @@ import com.divapps.aipok.devclub.views.LoadingView;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class FeedListFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class FeedListFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener {
 
     private static final String TAG = FeedListFragment.class.getSimpleName();
     private static final int UNSELECTED = -1;
@@ -34,6 +36,7 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
     private LoadingView loadingView;
     private ItemsAdapter adapter;
     private int currentSelectedItem = UNSELECTED;
+    private NetworkImageView backgroundView;
 
     public FeedListFragment() { }
 
@@ -46,8 +49,7 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(model == null)
-            reloadFeeds();
+        reloadFeeds();
     }
 
     @Override
@@ -69,6 +71,7 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
         adapter = new ItemsAdapter(getActivity());
         gridView.setAdapter(adapter);
         loadingView = (LoadingView) v.findViewById(R.id.loading_view);
+        backgroundView = (NetworkImageView) v.findViewById(R.id.background);
         return v;
     }
 
@@ -94,6 +97,9 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
 
     private void updateUI(boolean success) {
         if(getView() != null) {
+
+            backgroundView.setImageUrl(model.coverImage, App.getLoader());
+
             adapter.notifyDataSetChanged();
             loadingView.hide();
             if (success)
@@ -108,6 +114,14 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
         else
             currentSelectedItem = position;
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.play){
+            final ItemModel model = adapter.getItem((Integer) v.getTag());
+            Log.d(TAG, "Play button clicked and movie: "+model.mediaUrl+" will be started soon");
+        }
     }
 
     private class ItemsAdapter extends BaseAdapter{
@@ -145,16 +159,30 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
                 holder.titleView = (TextView) convertView.findViewById(R.id.title);
                 holder.descriptionView = (TextView) convertView.findViewById(R.id.description);
                 holder.separatorView = convertView.findViewById(R.id.separator);
+                holder.date = (TextView) convertView.findViewById(R.id.date);
+                holder.image = (NetworkImageView) convertView.findViewById(R.id.image);
+                holder.play = (ImageButton) convertView.findViewById(R.id.play);
+                holder.play.setOnClickListener(FeedListFragment.this);
                 convertView.setTag(holder);
             }
             final Holder holder = (Holder) convertView.getTag();
+            holder.play.setTag(position);
             final ItemModel model = getItem(position);
             if(model != null){
-                holder.titleView.setText(TextUtils.isEmpty(model.title)? null: model.title);
-                holder.titleView.setVisibility(TextUtils.isEmpty(model.title)? View.GONE: View.VISIBLE);
+                holder.titleView.setText(TextUtils.isEmpty(model.title) ? null : model.title);
+                holder.titleView.setVisibility(TextUtils.isEmpty(model.title) ? View.GONE : View.VISIBLE);
 
-                holder.descriptionView.setText(TextUtils.isEmpty(model.description)? null: model.description);
-                holder.descriptionView.setVisibility(TextUtils.isEmpty(model.description)? View.GONE: View.VISIBLE);
+                holder.descriptionView.setText(TextUtils.isEmpty(model.summary) ? null : model.summary);
+                holder.descriptionView.setVisibility(TextUtils.isEmpty(model.summary) ? View.GONE : View.VISIBLE);
+
+                holder.date.setText(TextUtils.isEmpty(model.publicationDate) ? null : String.format("Posted: %s", model.publicationDate));
+                holder.date.setVisibility(TextUtils.isEmpty(model.publicationDate) ? View.GONE : View.VISIBLE);
+
+                if(!TextUtils.isEmpty(model.imageUrl)){
+                    holder.image.setImageUrl(model.imageUrl, App.getLoader());
+                }else{
+                    holder.image.setImageUrl(null, App.getLoader());
+                }
             }
             holder.separatorView.setVisibility(holder.titleView.getVisibility() == View.VISIBLE && holder.descriptionView.getVisibility() == View.VISIBLE
                     ? View.VISIBLE: View.GONE);
@@ -167,9 +195,10 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
         }
 
         private class Holder{
-            TextView titleView;
-            TextView descriptionView;
+            TextView titleView, descriptionView, date;
             View separatorView;
+            NetworkImageView image;
+            ImageButton play;
         }
     }
 }
