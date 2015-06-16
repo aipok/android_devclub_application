@@ -11,7 +11,7 @@ public class FeedsResponseModel {
 
     public String title;
     public String description;
-    public final List<FeedModel> items;
+    public final List<ItemModel> items;
 
     public FeedsResponseModel(){
         items = new ArrayList<>();

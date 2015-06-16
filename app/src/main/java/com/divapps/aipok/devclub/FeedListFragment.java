@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.divapps.aipok.devclub.models.FeedModel;
+import com.divapps.aipok.devclub.models.ItemModel;
 import com.divapps.aipok.devclub.models.FeedsResponseModel;
 import com.divapps.aipok.devclub.network.FeedsRequest;
 import com.divapps.aipok.devclub.views.LoadingView;
@@ -64,18 +64,25 @@ public class FeedListFragment extends Fragment {
             @Override
             public void onResponse(FeedsResponseModel response) {
                 model = response;
-                adapter.notifyDataSetChanged();
-                loadingView.hide();
-                gridView.setVisibility(View.VISIBLE);
+                updateUI(true);
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.w(TAG, error.getMessage());
-                adapter.notifyDataSetChanged();
-                loadingView.hide();
+                updateUI(false);
             }
-        }), TAG);
+        }), FeedsRequest.TAG);
+    }
+
+    private void updateUI(boolean success) {
+        if(getView() != null) {
+            adapter.notifyDataSetChanged();
+            loadingView.hide();
+            if (success)
+                gridView.setVisibility(View.VISIBLE);
+        }
     }
 
     private class ItemsAdapter extends BaseAdapter{
@@ -92,8 +99,12 @@ public class FeedListFragment extends Fragment {
         }
 
         @Override
-        public FeedModel getItem(int position) {
-            return model != null && position < model.items.size() ? model.items.get(position): null;
+        public ItemModel getItem(int position) {
+            try{
+                return model.items.get(position);
+            }catch (NullPointerException | ArrayIndexOutOfBoundsException e){
+                return null;
+            }
         }
 
         @Override
@@ -112,7 +123,7 @@ public class FeedListFragment extends Fragment {
                 convertView.setTag(holder);
             }
             final Holder holder = (Holder) convertView.getTag();
-            final FeedModel model = getItem(position);
+            final ItemModel model = getItem(position);
             if(model != null){
                 holder.titleView.setText(TextUtils.isEmpty(model.title)? null: model.title);
                 holder.titleView.setVisibility(TextUtils.isEmpty(model.title)? View.GONE: View.VISIBLE);
@@ -127,11 +138,11 @@ public class FeedListFragment extends Fragment {
 
             return convertView;
         }
-    }
 
-    private class Holder{
-        TextView titleView;
-        TextView descriptionView;
-        View separatorView;
+        private class Holder{
+            TextView titleView;
+            TextView descriptionView;
+            View separatorView;
+        }
     }
 }
