@@ -3,11 +3,13 @@ package com.divapps.aipok.devclub;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -23,13 +25,15 @@ import com.divapps.aipok.devclub.views.LoadingView;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class FeedListFragment extends Fragment {
+public class FeedListFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private static final String TAG = FeedListFragment.class.getSimpleName();
+    private static final int UNSELECTED = -1;
     private FeedsResponseModel model;
     private GridView gridView;
     private LoadingView loadingView;
     private ItemsAdapter adapter;
+    private int currentSelectedItem = UNSELECTED;
 
     public FeedListFragment() { }
 
@@ -44,6 +48,18 @@ public class FeedListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         if(model == null)
             reloadFeeds();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        gridView.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        gridView.setOnItemClickListener(null);
     }
 
     @Override
@@ -83,6 +99,15 @@ public class FeedListFragment extends Fragment {
             if (success)
                 gridView.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if(currentSelectedItem == position)
+            currentSelectedItem = UNSELECTED;
+        else
+            currentSelectedItem = position;
+        adapter.notifyDataSetChanged();
     }
 
     private class ItemsAdapter extends BaseAdapter{
@@ -131,10 +156,12 @@ public class FeedListFragment extends Fragment {
                 holder.descriptionView.setText(TextUtils.isEmpty(model.description)? null: model.description);
                 holder.descriptionView.setVisibility(TextUtils.isEmpty(model.description)? View.GONE: View.VISIBLE);
             }
-            holder.separatorView.setVisibility(
-                holder.titleView.getVisibility() == View.VISIBLE
-             && holder.descriptionView.getVisibility() == View.VISIBLE
+            holder.separatorView.setVisibility(holder.titleView.getVisibility() == View.VISIBLE && holder.descriptionView.getVisibility() == View.VISIBLE
                     ? View.VISIBLE: View.GONE);
+
+            final CardView  cardView = (CardView) convertView;
+            cardView.setCardElevation(5.0f);
+            ((CardView)convertView).setMaxCardElevation(10.0f);
 
             return convertView;
         }
