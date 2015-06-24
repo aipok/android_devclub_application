@@ -39,6 +39,22 @@ public class App extends Application {
         return app;
     }
 
+    private static String deviceType;
+    public static boolean isPhone(){
+        return "phone".equals(deviceType);
+    }
+
+    public static boolean isTablet(){
+        return isTablet600() || isTablet720();
+    }
+
+    public static boolean isTablet600(){
+        return "sw600dp".equals(deviceType);
+    }
+
+    public static boolean isTablet720(){
+        return "sw720dp".equals(deviceType);
+    }
 
     /**
      * Getter for application request pool.
@@ -51,9 +67,9 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         app = this;
+        deviceType = getApplicationContext().getResources().getString(R.string.device_type);
         appContext = getApplicationContext();
         queue = Volley.newRequestQueue(getApplicationContext());
-
         imageLoader = new ImageLoader(queue, new LruBitmapCache(LruBitmapCache.getCacheSize(appContext)));
 
         setDefaultVerifier();

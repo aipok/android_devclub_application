@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -82,7 +83,6 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
     }
 
     @Override public void onRefresh() {
-
         reloadFeeds();
     }
 
@@ -174,6 +174,7 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
                 holder.separatorView = convertView.findViewById(R.id.separator);
                 holder.date = (TextView) convertView.findViewById(R.id.date);
                 holder.image = (NetworkImageView) convertView.findViewById(R.id.image);
+
                 holder.play = (ImageButton) convertView.findViewById(R.id.play);
                 holder.play.setOnClickListener(FeedListFragment.this);
                 convertView.setTag(holder);
@@ -181,6 +182,11 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
             final Holder holder = (Holder) convertView.getTag();
             holder.play.setTag(position);
             final ItemModel model = getItem(position);
+            if(App.isPhone()){
+                ImageUtils.Size size = ImageUtils.calculateSizeBasedOnWidthAndAspectRatio(convertView.getMeasuredWidth(), 615, 461);
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(size.getWidth(), size.getHeight());
+                holder.image.setLayoutParams(params);
+            }
             if(model != null){
                 holder.titleView.setText(TextUtils.isEmpty(model.title) ? null : model.title);
                 holder.titleView.setVisibility(TextUtils.isEmpty(model.title) ? View.GONE : View.VISIBLE);
@@ -197,7 +203,7 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
                     holder.image.setImageUrl(null, App.getLoader());
                 }
             }
-            holder.separatorView.setVisibility(holder.titleView.getVisibility() == View.VISIBLE && holder.descriptionView.getVisibility() == View.VISIBLE
+            holder.separatorView.setVisibility(App.isTablet() && holder.titleView.getVisibility() == View.VISIBLE && holder.descriptionView.getVisibility() == View.VISIBLE
                     ? View.VISIBLE: View.GONE);
 
             final CardView  cardView = (CardView) convertView;
