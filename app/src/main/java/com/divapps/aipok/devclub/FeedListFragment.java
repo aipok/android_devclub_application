@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,22 +23,21 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.divapps.aipok.devclub.models.FeedsResponseModel;
 import com.divapps.aipok.devclub.models.ItemModel;
 import com.divapps.aipok.devclub.network.FeedsRequest;
-import com.divapps.aipok.devclub.views.LoadingView;
 
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class FeedListFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class FeedListFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = FeedListFragment.class.getSimpleName();
     private static final int UNSELECTED = -1;
     private FeedsResponseModel model;
     private GridView gridView;
-    private LoadingView loadingView;
     private ItemsAdapter adapter;
     private int currentSelectedItem = UNSELECTED;
     private NetworkImageView backgroundView;
+    private SwipeRefreshLayout swipeLayout;
 
     public FeedListFragment() { }
 
@@ -71,27 +71,37 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
         gridView = (GridView) v.findViewById(R.id.list);
         adapter = new ItemsAdapter(getActivity());
         gridView.setAdapter(adapter);
-        loadingView = (LoadingView) v.findViewById(R.id.loading_view);
         backgroundView = (NetworkImageView) v.findViewById(R.id.background);
+        swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_container);
+        swipeLayout.setOnRefreshListener(this);
+        swipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
         return v;
     }
 
+    @Override public void onRefresh() {
+
+        reloadFeeds();
+    }
+
     public void reloadFeeds() {
-        gridView.setVisibility(View.GONE);
-        loadingView.show();
+        swipeLayout.setRefreshing(true);
         //Start feed loading request...
         App.addRequestToQueueWithTag(App.getApplicationQueue(), new FeedsRequest(new Response.Listener<FeedsResponseModel>() {
             @Override
             public void onResponse(FeedsResponseModel response) {
                 model = response;
                 updateUI(true);
-
+                swipeLayout.setRefreshing(false);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.w(TAG, error.getMessage());
                 updateUI(false);
+                swipeLayout.setRefreshing(false);
             }
         }), FeedsRequest.TAG);
     }
@@ -102,7 +112,6 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
             backgroundView.setImageUrl(model.coverImage, App.getLoader());
 
             adapter.notifyDataSetChanged();
-            loadingView.hide();
             if (success)
                 gridView.setVisibility(View.VISIBLE);
         }
