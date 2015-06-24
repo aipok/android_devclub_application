@@ -2,6 +2,7 @@ package com.divapps.aipok.devclub;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -182,7 +183,8 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
             final Holder holder = (Holder) convertView.getTag();
             holder.play.setTag(position);
             final ItemModel model = getItem(position);
-            if(App.isPhone()){
+
+            if(App.isPhone() && getResources().getConfiguration().orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
                 ImageUtils.Size size = ImageUtils.calculateSizeBasedOnWidthAndAspectRatio(convertView.getMeasuredWidth(), 615, 461);
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(size.getWidth(), size.getHeight());
                 holder.image.setLayoutParams(params);
