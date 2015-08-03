@@ -4,18 +4,9 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 
 public class NoRetryPolicy implements RetryPolicy {
-
-	private static final int DEFAULT_TIMEOUT = 10000;
 	/** The current timeout in milliseconds. */
     private int mCurrentTimeoutMs;
-	
-    /**
-     * Constructs a new retry policy with retry count 0.
-     */
-    public NoRetryPolicy() {
-        this(DEFAULT_TIMEOUT);
-    }
-    
+
     /**
      * Constructs a new retry policy with retry count 0.
      * @param initialTimeoutMs The initial timeout for the policy.
