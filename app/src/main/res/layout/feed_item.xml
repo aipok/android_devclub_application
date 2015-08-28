@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -50,7 +51,7 @@
                     android:maxLines="2"
                     android:padding="5dp"
                     android:textColor="@android:color/black"
-                    android:textSize="18sp" />
+                    android:textSize="18sp" tools:text="The title of the article" />
 
                 <TextView
                     android:id="@+id/date"
@@ -59,7 +60,7 @@
                     android:padding="5dp"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
-                    android:textStyle="italic" />
+                    android:textStyle="italic" tools:text="Posted: Thu, 27 Aug 2015 15:00:02 +0000" />
             </LinearLayout>
         </LinearLayout>
 
@@ -77,7 +78,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:textColor="@android:color/black"
-            android:textSize="14sp" />
+            android:textSize="14sp" tools:text="When disaster strikes, who's first on the scene? More and more, it’s a robot. In her lab, Robin Murphy builds robots that fly, tunnel, swim and crawl through disaster scenes, helping firefighters and rescue workers save more lives safely -- and help communities return to normal up to three years faster." />
 
     </LinearLayout>
 </android.support.v7.widget.CardView>
