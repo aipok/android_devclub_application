@@ -28,7 +28,8 @@
                     android:maxLines="4"
                     android:padding="5dp"
                     android:textColor="@android:color/black"
-                    android:textSize="18sp" tools:text="The title of the article" />
+                    android:textSize="18sp"
+                    tools:text="The title of the article" />
 
                 <TextView
                     android:id="@+id/date"
@@ -37,7 +38,8 @@
                     android:padding="5dp"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
-                    android:textStyle="italic" tools:text="Posted: Thu, 27 Aug 2015 15:00:02 +0000" />
+                    android:textStyle="italic"
+                    tools:text="Posted: Thu, 27 Aug 2015 15:00:02 +0000" />
             </LinearLayout>
 
             <FrameLayout
