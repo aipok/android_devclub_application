@@ -31,7 +31,8 @@
         android:paddingRight="@dimen/collection_horizontal_padding"
         android:scrollbarStyle="outsideOverlay"
         android:scrollbarThumbVertical="@drawable/scrollbar"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:listitem="@layout/feed_item" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 </FrameLayout>

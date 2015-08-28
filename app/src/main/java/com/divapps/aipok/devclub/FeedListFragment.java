@@ -28,7 +28,10 @@ import com.divapps.aipok.devclub.network.FeedsRequest;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class FeedListFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class FeedListFragment extends Fragment
+        implements AdapterView.OnItemClickListener,
+                   View.OnClickListener,
+                   SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = FeedListFragment.class.getSimpleName();
     private static final int UNSELECTED = -1;
@@ -74,15 +77,14 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
         backgroundView = (NetworkImageView) v.findViewById(R.id.background);
         swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
-        swipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
+        swipeLayout.setColorSchemeResources(android.R.color.holo_red_dark,
+                android.R.color.holo_red_dark,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
         return v;
     }
 
     @Override public void onRefresh() {
-
         reloadFeeds();
     }
 
@@ -188,7 +190,8 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
                 holder.descriptionView.setText(TextUtils.isEmpty(model.summary) ? null : model.summary);
                 holder.descriptionView.setVisibility(TextUtils.isEmpty(model.summary) ? View.GONE : View.VISIBLE);
 
-                holder.date.setText(TextUtils.isEmpty(model.publicationDate) ? null : String.format("Posted: %s", model.publicationDate));
+                holder.date.setText(TextUtils.isEmpty(model.publicationDate) ? null
+                        : String.format("Posted: %s", model.publicationDate));
                 holder.date.setVisibility(TextUtils.isEmpty(model.publicationDate) ? View.GONE : View.VISIBLE);
 
                 if(!TextUtils.isEmpty(model.imageUrl)){
@@ -197,8 +200,10 @@ public class FeedListFragment extends Fragment implements AdapterView.OnItemClic
                     holder.image.setImageUrl(null, App.getLoader());
                 }
             }
-            holder.separatorView.setVisibility(holder.titleView.getVisibility() == View.VISIBLE && holder.descriptionView.getVisibility() == View.VISIBLE
-                    ? View.VISIBLE: View.GONE);
+            holder.separatorView
+                    .setVisibility(holder.titleView.getVisibility() == View.VISIBLE
+                        && holder.descriptionView.getVisibility() == View.VISIBLE
+                        ? View.VISIBLE: View.GONE);
 
             final CardView  cardView = (CardView) convertView;
             cardView.setCardElevation(5.0f);
