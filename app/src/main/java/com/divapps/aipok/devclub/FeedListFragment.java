@@ -170,7 +170,7 @@ public class FeedListFragment extends Fragment
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final FeedItemBinding holder;
-            if(convertView == null) {
+//            if(convertView == null) {
                 holder = FeedItemBinding.inflate(li, parent, false);
                 convertView = holder.getRoot();
 
@@ -184,8 +184,8 @@ public class FeedListFragment extends Fragment
 //
 //                holder.play = (ImageButton) convertView.findViewById(R.id.play);
 //                holder.play.setOnClickListener(FeedListFragment.this);
-            }else
-                holder = (FeedItemBinding) convertView.getTag();
+//            }else
+//                holder = (FeedItemBinding) convertView.getTag();
 
             holder.play.setTag(position);
             final ItemModel model = getItem(position);
@@ -196,14 +196,14 @@ public class FeedListFragment extends Fragment
                 holder.image.setLayoutParams(params);
             }
             if(model != null){
-                holder.title.setText(TextUtils.isEmpty(model.getTitle()) ? null : model.getTitle());
-                holder.title.setVisibility(TextUtils.isEmpty(model.getTitle()) ? View.GONE : View.VISIBLE);
-
-                holder.description.setText(TextUtils.isEmpty(model.getSummary()) ? null : model.getSummary());
-                holder.description.setVisibility(TextUtils.isEmpty(model.getSummary()) ? View.GONE : View.VISIBLE);
-
-                holder.date.setText(TextUtils.isEmpty(model.getPublicationDate()) ? null : String.format("Posted: %s", model.getPublicationDate()));
-                holder.date.setVisibility(TextUtils.isEmpty(model.getPublicationDate()) ? View.GONE : View.VISIBLE);
+//                holder.title.setText(TextUtils.isEmpty(model.getTitle()) ? null : model.getTitle());
+//                holder.title.setVisibility(TextUtils.isEmpty(model.getTitle()) ? View.GONE : View.VISIBLE);
+//
+//                holder.description.setText(TextUtils.isEmpty(model.getSummary()) ? null : model.getSummary());
+//                holder.description.setVisibility(TextUtils.isEmpty(model.getSummary()) ? View.GONE : View.VISIBLE);
+//
+//                holder.date.setText(TextUtils.isEmpty(model.getPublicationDate()) ? null : String.format("Posted: %s", model.getPublicationDate()));
+//                holder.date.setVisibility(TextUtils.isEmpty(model.getPublicationDate()) ? View.GONE : View.VISIBLE);
 
                 if(!TextUtils.isEmpty(model.getImageUrl())){
                     holder.image.setImageUrl(model.getImageUrl(), App.getLoader());
