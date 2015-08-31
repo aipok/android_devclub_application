@@ -2,8 +2,10 @@ package com.divapps.aipok.devclub;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
@@ -74,8 +76,7 @@ public class FeedListFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v =inflater.inflate(R.layout.fragment_main, container, false);
         gridView = (GridView) v.findViewById(R.id.list);
-        adapter = new ItemsAdapter(getActivity());
-        gridView.setAdapter(adapter);
+        updateCollectionView();
         backgroundView = (NetworkImageView) v.findViewById(R.id.background);
         swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
@@ -141,12 +142,37 @@ public class FeedListFragment extends Fragment
         }
     }
 
+    public void updateCollectionView() {
+        SharedPreferences pm = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean current = pm.getBoolean(MainActivity.KEY_VIEW_REPRESENTATION, false);
+        adapter = new ItemsAdapter(getActivity(), current);
+
+        if(current) {
+            gridView.setNumColumns(getResources().getInteger(R.integer.items_per_row));
+            gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+            gridView.setColumnWidth(100);
+            int horizontalPadding = getResources().getDimensionPixelSize(R.dimen.collection_horizontal_padding_multi_rows);
+            int verticalPadding = getResources().getDimensionPixelSize(R.dimen.collection_vertical_padding);
+            gridView.setPadding(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding);
+        }else{
+            gridView.setNumColumns(1);
+            int horizontalPadding = getResources().getDimensionPixelSize(R.dimen.collection_horizontal_padding);
+            int verticalPadding = getResources().getDimensionPixelSize(R.dimen.collection_horizontal_padding);
+            gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+            gridView.setPadding(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding);
+        }
+        gridView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
+
     private class ItemsAdapter extends BaseAdapter{
 
         private final LayoutInflater li;
+        private final int layout;
 
-        public ItemsAdapter(Context context) {
+        public ItemsAdapter(Context context, boolean isGrid) {
             li = LayoutInflater.from(context);
+            layout = isGrid ? R.layout.feed_item_grid: R.layout.feed_item;
         }
 
         @Override
@@ -171,15 +197,19 @@ public class FeedListFragment extends Fragment
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if(convertView == null) {
-                convertView = li.inflate(R.layout.feed_item, parent, false);
+                convertView = li.inflate(layout, parent, false);
                 Holder holder = new Holder();
                 holder.titleView = (TextView) convertView.findViewById(R.id.title);
-                holder.descriptionView = (TextView) convertView.findViewById(R.id.description);
-                holder.separatorView = convertView.findViewById(R.id.separator);
                 holder.date = (TextView) convertView.findViewById(R.id.date);
                 holder.image = (NetworkImageView) convertView.findViewById(R.id.image);
                 holder.play = (ImageButton) convertView.findViewById(R.id.play);
                 holder.play.setOnClickListener(FeedListFragment.this);
+                holder.descriptionView = (TextView) convertView.findViewById(R.id.description);
+                holder.separatorView = convertView.findViewById(R.id.separator);
+                if(layout == R.layout.feed_item_grid){
+                    ImageUtils.Size size = ImageUtils.calculateSizeBasedOnWidthAndAspectRatio(convertView.getMeasuredWidth(), 615, 461);
+                    convertView.setMinimumHeight(size.getHeight());
+                }
                 convertView.setTag(holder);
             }
             final Holder holder = (Holder) convertView.getTag();
@@ -195,9 +225,10 @@ public class FeedListFragment extends Fragment
                 holder.titleView.setText(TextUtils.isEmpty(model.title) ? null : model.title);
                 holder.titleView.setVisibility(TextUtils.isEmpty(model.title) ? View.GONE : View.VISIBLE);
 
-                holder.descriptionView.setText(TextUtils.isEmpty(model.summary) ? null : model.summary);
-                holder.descriptionView.setVisibility(TextUtils.isEmpty(model.summary) ? View.GONE : View.VISIBLE);
-
+                if(holder.descriptionView != null) {
+                    holder.descriptionView.setText(TextUtils.isEmpty(model.summary) ? null : model.summary);
+                    holder.descriptionView.setVisibility(TextUtils.isEmpty(model.summary) ? View.GONE : View.VISIBLE);
+                }
                 holder.date.setText(TextUtils.isEmpty(model.publicationDate) ? null
                         : String.format("Posted: %s", model.publicationDate));
                 holder.date.setVisibility(TextUtils.isEmpty(model.publicationDate) ? View.GONE : View.VISIBLE);
@@ -208,8 +239,11 @@ public class FeedListFragment extends Fragment
                     holder.image.setImageUrl(null, App.getLoader());
                 }
             }
-            holder.separatorView.setVisibility(App.isTablet() && holder.titleView.getVisibility() == View.VISIBLE && holder.descriptionView.getVisibility() == View.VISIBLE
-                    ? View.VISIBLE: View.GONE);
+            if(holder.separatorView != null)
+                holder.separatorView.setVisibility(App.isTablet()
+                        && holder.titleView.getVisibility() == View.VISIBLE
+                        && holder.descriptionView.getVisibility() == View.VISIBLE
+                        ? View.VISIBLE: View.GONE);
 
             final CardView  cardView = (CardView) convertView;
             cardView.setCardElevation(5.0f);

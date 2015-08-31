@@ -34,6 +34,7 @@
         android:scrollbarStyle="outsideOverlay"
         android:scrollbarThumbVertical="@drawable/scrollbar"
         android:visibility="visible"
+        android:horizontalSpacing="20dp"
         tools:listitem="@layout/feed_item" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
