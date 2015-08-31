@@ -12,7 +12,6 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.divapps.aipok.devclub.BuildConfig;
 import com.divapps.aipok.devclub.models.FeedsResponseModel;
 import com.divapps.aipok.devclub.models.ItemModel;
 import com.divapps.aipok.devclub.network.additional.NoRetryPolicy;
@@ -106,13 +105,13 @@ public class FeedsRequest extends Request<FeedsResponseModel> {
 			switch (xpp.getEventType()) {
 				// start of the document
 				case XmlPullParser.START_DOCUMENT:
-					if(BuildConfig.DEBUG && LOG_ENABLED)
+					if(LOG_ENABLED)
 						Log.d(TAG, "START_DOCUMENT");
 					break;
 				// start of the tag
 				case XmlPullParser.START_TAG:
 					N = xpp.getName();
-					if(BuildConfig.DEBUG && LOG_ENABLED)
+					if(LOG_ENABLED)
 						Log.d(TAG, "START_TAG: name = " + xpp.getName() + ", depth = " + xpp.getDepth() + ", attrCount = " + xpp.getAttributeCount());
 					if (tempItem == null && TAG_IMAGE.equals(N)) {
 						responseObject.coverImage = xpp.getAttributeValue(null, TAG_HREF);
@@ -121,16 +120,16 @@ public class FeedsRequest extends Request<FeedsResponseModel> {
 					if (TAG_ITEM.equals(N))
 						tempItem = new ItemModel();
 					else if (TAG_IMAGE.equals(N))
-						tempItem.imageUrl = xpp.getAttributeValue(null, TAG_HREF);
+						tempItem.setImageUrl(xpp.getAttributeValue(null, TAG_HREF));
 					else if (TAG_CONTENT.equals(N))
-						tempItem.mediaUrl = xpp.getAttributeValue(null, TAG_URL);
+						tempItem.setMediaUrl(xpp.getAttributeValue(null, TAG_URL));
 
 
 
 					break;
 				// end of the tag
 				case XmlPullParser.END_TAG:
-					if(BuildConfig.DEBUG && LOG_ENABLED)
+					if(LOG_ENABLED)
 						Log.d(TAG, "END_TAG: name = " + xpp.getName());
 					if(TAG_ITEM.equals(xpp.getName())){
 						responseObject.items.add(tempItem);
@@ -141,17 +140,18 @@ public class FeedsRequest extends Request<FeedsResponseModel> {
 				// content of the tag
 				case XmlPullParser.TEXT:
 					tmp = xpp.getText();
-					if (BuildConfig.DEBUG && LOG_ENABLED && !TextUtils.isEmpty(tmp))
+					//noinspection PointlessBooleanExpression,ConstantConditions
+					if (LOG_ENABLED && !TextUtils.isEmpty(tmp))
 						Log.d(TAG, "text = " + tmp);
 					if(tempItem != null) {
 						if (TAG_TITLE.equals(N))
-							tempItem.title = tmp;
+							tempItem.setTitle(tmp);
 						else if (TAG_SUMMARY.equals(N))
-							tempItem.summary = tmp;
+							tempItem.setSummary(tmp);
 						else if (TAG_PUBLICATION_DATE.equals(N))
-							tempItem.publicationDate = tmp;
+							tempItem.setPublicationDate(tmp);
 						else if (TAG_DURATION.equals(N))
-							tempItem.duration = tmp;
+							tempItem.setDuration(tmp);
 					}else{
 						if (TAG_TITLE.equals(N))
 							responseObject.title = tmp;

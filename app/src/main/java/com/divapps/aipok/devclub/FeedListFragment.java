@@ -16,12 +16,11 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
+import com.divapps.aipok.devclub.databinding.FeedItemBinding;
 import com.divapps.aipok.devclub.models.FeedsResponseModel;
 import com.divapps.aipok.devclub.models.ItemModel;
 import com.divapps.aipok.devclub.network.FeedsRequest;
@@ -135,9 +134,9 @@ public class FeedListFragment extends Fragment
         if(v.getId() == R.id.play){
             final ItemModel model = adapter.getItem((Integer) v.getTag());
             Intent intent = new Intent(getActivity(), Player.class);
-            intent.putExtra(Player.URL_TAG, model.mediaUrl);
+            intent.putExtra(Player.URL_TAG, model.getMediaUrl());
             startActivity(intent);
-            Log.d(TAG, "Play button clicked and movie: " + model.mediaUrl + " will be started soon");
+            Log.d(TAG, "Play button clicked and movie: " + model.getMediaUrl() + " will be started soon");
         }
     }
 
@@ -170,45 +169,49 @@ public class FeedListFragment extends Fragment
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            final FeedItemBinding holder;
             if(convertView == null) {
-                convertView = li.inflate(R.layout.feed_item, parent, false);
-                Holder holder = new Holder();
-                holder.titleView = (TextView) convertView.findViewById(R.id.title);
-                holder.descriptionView = (TextView) convertView.findViewById(R.id.description);
-                holder.separatorView = convertView.findViewById(R.id.separator);
-                holder.date = (TextView) convertView.findViewById(R.id.date);
-                holder.image = (NetworkImageView) convertView.findViewById(R.id.image);
-                holder.play = (ImageButton) convertView.findViewById(R.id.play);
-                holder.play.setOnClickListener(FeedListFragment.this);
-                convertView.setTag(holder);
-            }
-            final Holder holder = (Holder) convertView.getTag();
+                holder = FeedItemBinding.inflate(li, parent, false);
+                convertView = holder.getRoot();
+
+
+//                holder.titleView = (TextView) convertView.findViewById(R.id.title);
+//                holder.descriptionView = (TextView) convertView.findViewById(R.id.description);
+//                holder.separatorView = convertView.findViewById(R.id.separator);
+//                holder.date = (TextView) convertView.findViewById(R.id.date);
+//                holder.image = (NetworkImageView) convertView.findViewById(R.id.image);
+//
+//
+//                holder.play = (ImageButton) convertView.findViewById(R.id.play);
+//                holder.play.setOnClickListener(FeedListFragment.this);
+            }else
+                holder = (FeedItemBinding) convertView.getTag();
+
             holder.play.setTag(position);
             final ItemModel model = getItem(position);
-
+            holder.setItem(model);
             if(App.isPhone() && getResources().getConfiguration().orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
                 ImageUtils.Size size = ImageUtils.calculateSizeBasedOnWidthAndAspectRatio(convertView.getMeasuredWidth(), 615, 461);
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(size.getWidth(), size.getHeight());
                 holder.image.setLayoutParams(params);
             }
             if(model != null){
-                holder.titleView.setText(TextUtils.isEmpty(model.title) ? null : model.title);
-                holder.titleView.setVisibility(TextUtils.isEmpty(model.title) ? View.GONE : View.VISIBLE);
+                holder.title.setText(TextUtils.isEmpty(model.getTitle()) ? null : model.getTitle());
+                holder.title.setVisibility(TextUtils.isEmpty(model.getTitle()) ? View.GONE : View.VISIBLE);
 
-                holder.descriptionView.setText(TextUtils.isEmpty(model.summary) ? null : model.summary);
-                holder.descriptionView.setVisibility(TextUtils.isEmpty(model.summary) ? View.GONE : View.VISIBLE);
+                holder.description.setText(TextUtils.isEmpty(model.getSummary()) ? null : model.getSummary());
+                holder.description.setVisibility(TextUtils.isEmpty(model.getSummary()) ? View.GONE : View.VISIBLE);
 
-                holder.date.setText(TextUtils.isEmpty(model.publicationDate) ? null
-                        : String.format("Posted: %s", model.publicationDate));
-                holder.date.setVisibility(TextUtils.isEmpty(model.publicationDate) ? View.GONE : View.VISIBLE);
+                holder.date.setText(TextUtils.isEmpty(model.getPublicationDate()) ? null : String.format("Posted: %s", model.getPublicationDate()));
+                holder.date.setVisibility(TextUtils.isEmpty(model.getPublicationDate()) ? View.GONE : View.VISIBLE);
 
-                if(!TextUtils.isEmpty(model.imageUrl)){
-                    holder.image.setImageUrl(model.imageUrl, App.getLoader());
+                if(!TextUtils.isEmpty(model.getImageUrl())){
+                    holder.image.setImageUrl(model.getImageUrl(), App.getLoader());
                 }else{
                     holder.image.setImageUrl(null, App.getLoader());
                 }
             }
-            holder.separatorView.setVisibility(App.isTablet() && holder.titleView.getVisibility() == View.VISIBLE && holder.descriptionView.getVisibility() == View.VISIBLE
+            holder.separator.setVisibility(App.isTablet() && holder.title.getVisibility() == View.VISIBLE && holder.description.getVisibility() == View.VISIBLE
                     ? View.VISIBLE: View.GONE);
 
             final CardView  cardView = (CardView) convertView;
@@ -218,11 +221,26 @@ public class FeedListFragment extends Fragment
             return convertView;
         }
 
-        private class Holder{
-            TextView titleView, descriptionView, date;
-            View separatorView;
-            NetworkImageView image;
-            ImageButton play;
+        private class Holder {
+            private FeedItemBinding binding;
+
+            public Holder() {
+            }
+
+            public FeedItemBinding getBinding() {
+                return binding;
+            }
+
+            public void setBinding(FeedItemBinding binding) {
+                this.binding = binding;
+            }
+
+//            TextView titleView;
+//            TextView descriptionView;
+//            TextView date;
+//            View separatorView;
+//            NetworkImageView image;
+//            ImageButton play;
         }
     }
 }
