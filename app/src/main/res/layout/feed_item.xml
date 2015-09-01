@@ -88,6 +88,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:textColor="@android:color/black"
+                android:text="@{item.getSummary()}"
                 android:textSize="14sp"
                 tools:text="When disaster strikes, who's first on the scene? More and more, it's a robot. In her lab, Robin Murphy builds robots that fly, tunnel, swim and crawl through disaster scenes, helping firefighters and rescue workers save more lives safely -- and help communities return to normal up to three years faster." />
 

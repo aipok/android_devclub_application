@@ -170,9 +170,10 @@ public class FeedListFragment extends Fragment
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final FeedItemBinding holder;
-//            if(convertView == null) {
+            if(convertView == null) {
                 holder = FeedItemBinding.inflate(li, parent, false);
                 convertView = holder.getRoot();
+                convertView.setTag(holder);
 
 
 //                holder.titleView = (TextView) convertView.findViewById(R.id.title);
@@ -184,8 +185,8 @@ public class FeedListFragment extends Fragment
 //
 //                holder.play = (ImageButton) convertView.findViewById(R.id.play);
 //                holder.play.setOnClickListener(FeedListFragment.this);
-//            }else
-//                holder = (FeedItemBinding) convertView.getTag();
+            }else
+                holder = (FeedItemBinding) convertView.getTag();
 
             holder.play.setTag(position);
             final ItemModel model = getItem(position);
