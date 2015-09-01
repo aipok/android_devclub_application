@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -174,17 +173,6 @@ public class FeedListFragment extends Fragment
                 holder = FeedItemBinding.inflate(li, parent, false);
                 convertView = holder.getRoot();
                 convertView.setTag(holder);
-
-
-//                holder.titleView = (TextView) convertView.findViewById(R.id.title);
-//                holder.descriptionView = (TextView) convertView.findViewById(R.id.description);
-//                holder.separatorView = convertView.findViewById(R.id.separator);
-//                holder.date = (TextView) convertView.findViewById(R.id.date);
-//                holder.image = (NetworkImageView) convertView.findViewById(R.id.image);
-//
-//
-//                holder.play = (ImageButton) convertView.findViewById(R.id.play);
-//                holder.play.setOnClickListener(FeedListFragment.this);
             }else
                 holder = (FeedItemBinding) convertView.getTag();
 
@@ -197,15 +185,6 @@ public class FeedListFragment extends Fragment
                 holder.image.setLayoutParams(params);
             }
             if(model != null){
-//                holder.title.setText(TextUtils.isEmpty(model.getTitle()) ? null : model.getTitle());
-//                holder.title.setVisibility(TextUtils.isEmpty(model.getTitle()) ? View.GONE : View.VISIBLE);
-//
-//                holder.description.setText(TextUtils.isEmpty(model.getSummary()) ? null : model.getSummary());
-//                holder.description.setVisibility(TextUtils.isEmpty(model.getSummary()) ? View.GONE : View.VISIBLE);
-//
-//                holder.date.setText(TextUtils.isEmpty(model.getPublicationDate()) ? null : String.format("Posted: %s", model.getPublicationDate()));
-//                holder.date.setVisibility(TextUtils.isEmpty(model.getPublicationDate()) ? View.GONE : View.VISIBLE);
-
                 if(!TextUtils.isEmpty(model.getImageUrl())){
                     holder.image.setImageUrl(model.getImageUrl(), App.getLoader());
                 }else{
@@ -215,33 +194,7 @@ public class FeedListFragment extends Fragment
             holder.separator.setVisibility(App.isTablet() && holder.title.getVisibility() == View.VISIBLE && holder.description.getVisibility() == View.VISIBLE
                     ? View.VISIBLE: View.GONE);
 
-            final CardView  cardView = (CardView) convertView;
-            cardView.setCardElevation(5.0f);
-            ((CardView)convertView).setMaxCardElevation(10.0f);
-
             return convertView;
-        }
-
-        private class Holder {
-            private FeedItemBinding binding;
-
-            public Holder() {
-            }
-
-            public FeedItemBinding getBinding() {
-                return binding;
-            }
-
-            public void setBinding(FeedItemBinding binding) {
-                this.binding = binding;
-            }
-
-//            TextView titleView;
-//            TextView descriptionView;
-//            TextView date;
-//            View separatorView;
-//            NetworkImageView image;
-//            ImageButton play;
         }
     }
 }

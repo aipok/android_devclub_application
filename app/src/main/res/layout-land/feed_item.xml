@@ -1,87 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="item"
+            type="com.divapps.aipok.devclub.models.ItemModel" />
+    </data>
+
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        card_view:cardElevation="5dp"
+        card_view:cardMaxElevation="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <FrameLayout
-                android:layout_width="154dp"
-                android:layout_height="116dp"
-                android:background="#ababab">
-
-                <com.android.volley.toolbox.NetworkImageView
-                    android:id="@+id/image"
-                    android:layout_width="154dp"
-                    android:layout_height="116dp"
-                    android:contentDescription="@string/description"
-                    android:scaleType="fitCenter" />
-
-                <ImageButton
-                    android:background="@android:color/transparent"
-                    android:layout_gravity="center"
-                    android:id="@+id/play"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/play" />
-            </FrameLayout>
+            android:layout_margin="20dp"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/title"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                <FrameLayout
+                    android:layout_width="154dp"
+                    android:layout_height="116dp"
+                    android:background="#ababab">
+
+                    <com.android.volley.toolbox.NetworkImageView
+                        android:id="@+id/image"
+                        android:layout_width="154dp"
+                        android:layout_height="116dp"
+                        android:contentDescription="@string/description"
+                        android:scaleType="fitCenter" />
+
+                    <ImageButton
+                        android:id="@+id/play"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/play" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:padding="5dp"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp"
-                    tools:text="The title of the article" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp"
-                    android:textStyle="italic"
-                    tools:text="Posted: Thu, 27 Aug 2015 15:00:02 +0000"/>
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:text="@{item.title}"
+                        android:visibility="@{TextUtils.isEmpty(item.title) ? View.GONE : View.VISIBLE}"
+                        android:padding="5dp"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        tools:text="The title of the article"
+                        tools:ignore="NestedWeights" />
+
+                    <TextView
+                        android:id="@+id/date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="@{item.publicationDate}"
+                        android:visibility="@{TextUtils.isEmpty(item.publicationDate) ? View.GONE : View.VISIBLE}"
+                        android:textColor="@android:color/black"
+                        android:textSize="14sp"
+                        android:textStyle="italic"
+                        tools:text="Posted: Thu, 27 Aug 2015 15:00:02 +0000" />
+                </LinearLayout>
             </LinearLayout>
+
+            <View
+                android:id="@+id/separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="#ABABAB" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textColor="@android:color/black"
+                android:text="@{item.summary}"
+                android:visibility="@{TextUtils.isEmpty(item.summary) ? View.GONE : View.VISIBLE}"
+                android:textSize="14sp"
+                tools:text="When disaster strikes, who's first on the scene? More and more, it’s a robot. In her lab, Robin Murphy builds robots that fly, tunnel, swim and crawl through disaster scenes, helping firefighters and rescue workers save more lives safely -- and help communities return to normal up to three years faster." />
+
         </LinearLayout>
-
-        <View
-            android:id="@+id/separator"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:background="#ABABAB" />
-
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:textColor="@android:color/black"
-            android:textSize="14sp"
-            tools:text="When disaster strikes, who's first on the scene? More and more, it’s a robot. In her lab, Robin Murphy builds robots that fly, tunnel, swim and crawl through disaster scenes, helping firefighters and rescue workers save more lives safely -- and help communities return to normal up to three years faster." />
-
-    </LinearLayout>
-</android.support.v7.widget.CardView>
+    </android.support.v7.widget.CardView>
+</layout>
