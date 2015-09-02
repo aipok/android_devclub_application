@@ -34,7 +34,6 @@ import com.divapps.aipok.devclub.utils.ImageUtils;
  */
 public class FeedListFragment extends Fragment
         implements AdapterView.OnItemClickListener,
-                   View.OnClickListener,
                    SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = FeedListFragment.class.getSimpleName();
@@ -132,16 +131,18 @@ public class FeedListFragment extends Fragment
         adapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onClick(View v) {
-        if(v.getId() == R.id.play){
-            final ItemModel model = adapter.getItem((Integer) v.getTag());
-            Intent intent = new Intent(getActivity(), Player.class);
-            intent.putExtra(Player.URL_TAG, model.getMediaUrl());
-            startActivity(intent);
-            Log.d(TAG, "Play button clicked and movie: " + model.getMediaUrl() + " will be started soon");
+    public View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(v.getId() == R.id.play){
+                final ItemModel model = adapter.getItem((Integer) v.getTag());
+                Intent intent = new Intent(getActivity(), Player.class);
+                intent.putExtra(Player.URL_TAG, model.getMediaUrl());
+                startActivity(intent);
+                Log.d(TAG, "Play button clicked and movie: " + model.getMediaUrl() + " will be started soon");
+            }
         }
-    }
+    };
 
     private class ItemsAdapter extends BaseAdapter{
 
@@ -183,6 +184,7 @@ public class FeedListFragment extends Fragment
             holder.play.setTag(position);
             final ItemModel model = getItem(position);
             holder.setItem(model);
+            holder.setFragment(FeedListFragment.this);
             if(App.isPhone() && getResources().getConfiguration().orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
                 ImageUtils.Size size = ImageUtils.calculateSizeBasedOnWidthAndAspectRatio(convertView.getMeasuredWidth(), 615, 461);
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(size.getWidth(), size.getHeight());

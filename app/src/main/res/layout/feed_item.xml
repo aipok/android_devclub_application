@@ -4,9 +4,18 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.view.View"/>
-        <import type="android.text.TextUtils"/>
-        <variable name="item" type="com.divapps.aipok.devclub.models.ItemModel" />
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="fragment"
+            type="com.divapps.aipok.devclub.fragments.FeedListFragment" />
+
+        <variable
+            name="item"
+            type="com.divapps.aipok.devclub.models.ItemModel" />
     </data>
 
     <android.support.v7.widget.CardView
@@ -75,6 +84,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:background="@android:color/transparent"
+                        android:onClick="@{fragment.onClickListener}"
                         android:src="@drawable/play" />
                 </FrameLayout>
 
