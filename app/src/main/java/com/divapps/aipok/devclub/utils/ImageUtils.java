@@ -1,4 +1,4 @@
-package com.divapps.aipok.devclub;
+package com.divapps.aipok.devclub.utils;
 
 
 /**

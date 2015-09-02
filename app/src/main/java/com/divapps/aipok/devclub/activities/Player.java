@@ -1,4 +1,4 @@
-package com.divapps.aipok.devclub;
+package com.divapps.aipok.devclub.activities;
 
 import android.app.ProgressDialog;
 import android.media.MediaPlayer;
@@ -11,6 +11,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.MediaController;
 import android.widget.VideoView;
+
+import com.divapps.aipok.devclub.R;
 
 /**
  * Created by Vitali Nartov on 17/06/15.
