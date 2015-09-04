@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/fragment"
-        android:name="com.divapps.aipok.devclub.FeedListFragment"
+        android:name="com.divapps.aipok.devclub.fragments.FeedListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?actionBarSize"

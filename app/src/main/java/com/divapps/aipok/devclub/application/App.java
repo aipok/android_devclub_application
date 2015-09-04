@@ -1,4 +1,4 @@
-package com.divapps.aipok.devclub;
+package com.divapps.aipok.devclub.application;
 
 import android.app.Application;
 import android.content.Context;
@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.divapps.aipok.devclub.R;
 import com.divapps.aipok.devclub.network.cache.LruBitmapCache;
 
 import javax.net.ssl.HostnameVerifier;

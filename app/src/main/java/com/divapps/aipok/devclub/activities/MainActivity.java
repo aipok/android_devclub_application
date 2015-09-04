@@ -1,4 +1,4 @@
-package com.divapps.aipok.devclub;
+package com.divapps.aipok.devclub.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.divapps.aipok.devclub.R;
+import com.divapps.aipok.devclub.fragments.FeedListFragment;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -22,20 +25,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setLogo(R.drawable.top_logo);
 
         setSupportActionBar(toolbar);
-        ActionBar ab = getSupportActionBar();
-        if(ab != null) {
-            ab.setTitle(null);
-//            Drawable drawable;
-//            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-//                drawable = getResources().getDrawable(R.drawable.action_bar_bg, getTheme());
-//            else
-//                drawable = getResources().getDrawable(R.drawable.action_bar_bg);
-//            if(drawable != null) {
-//                Drawable dr = drawable.mutate();
-//                dr.setAlpha(150);
-//                ab.setBackgroundDrawable(dr);
-//            }
-        }
+        final ActionBar ab = getSupportActionBar();
+        if(ab != null) ab.setTitle(null);
     }
 
     @Override

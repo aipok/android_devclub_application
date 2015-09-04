@@ -2,6 +2,8 @@ package com.divapps.aipok.devclub;
 
 import android.test.AndroidTestCase;
 
+import com.divapps.aipok.devclub.utils.ImageUtils;
+
 /**
  * Created by Vitali Nartov on 24/06/15.
  *

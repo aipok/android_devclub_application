@@ -1,4 +1,4 @@
-package com.divapps.aipok.devclub;
+package com.divapps.aipok.devclub.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,10 +24,14 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
+import com.divapps.aipok.devclub.R;
+import com.divapps.aipok.devclub.activities.MainActivity;
+import com.divapps.aipok.devclub.activities.Player;
+import com.divapps.aipok.devclub.application.App;
 import com.divapps.aipok.devclub.models.FeedsResponseModel;
 import com.divapps.aipok.devclub.models.ItemModel;
 import com.divapps.aipok.devclub.network.FeedsRequest;
-
+import com.divapps.aipok.devclub.utils.ImageUtils;
 
 /**
  * A placeholder fragment containing a simple view.
