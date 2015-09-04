@@ -93,7 +93,7 @@
                 android:visibility="@{TextUtils.isEmpty(item.summary) ? View.GONE : View.VISIBLE}"
                 android:textColor="@android:color/black"
                 android:textSize="14sp"
-                tools:text="When disaster strikes, who's first on the scene? More and more, it’s a robot. In her lab, Robin Murphy builds robots that fly, tunnel, swim and crawl through disaster scenes, helping firefighters and rescue workers save more lives safely -- and help communities return to normal up to three years faster." />
+                tools:text="When disaster strikes, who's first on the scene? More and more, it's a robot. In her lab, Robin Murphy builds robots that fly, tunnel, swim and crawl through disaster scenes, helping firefighters and rescue workers save more lives safely -- and help communities return to normal up to three years faster." />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>
