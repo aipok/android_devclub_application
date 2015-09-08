@@ -34,7 +34,6 @@ public class App extends Application {
         return app().imageLoader;
     }
 
-
     private static App app;
     public static App app(){
         return app;

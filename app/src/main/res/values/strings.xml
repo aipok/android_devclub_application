@@ -6,4 +6,5 @@
     <string name="loading_title">Please wait…</string>
     <string name="description" translatable="false" />
     <string name="device_type" translatable="false" >phone</string>
+    <string name="action_data_binding">Enable DataBinding support</string>
 </resources>

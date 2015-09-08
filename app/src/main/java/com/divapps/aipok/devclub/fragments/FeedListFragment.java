@@ -113,7 +113,7 @@ public class FeedListFragment extends Fragment
     private void updateUI(boolean success) {
         if(getView() != null) {
             if (success) {
-                adapter.updateItems(model.items);
+                updateCollectionView();
                 backgroundView.setImageUrl(model.coverImage, App.getLoader());
                 gridView.setVisibility(View.VISIBLE);
             }
@@ -144,10 +144,12 @@ public class FeedListFragment extends Fragment
 
     public void updateCollectionView() {
         SharedPreferences pm = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        boolean current = pm.getBoolean(MainActivity.KEY_VIEW_REPRESENTATION, false);
-        adapter = new ItemAdapter(FeedListFragment.this, current);
+        boolean isGrid = pm.getBoolean(MainActivity.KEY_VIEW_REPRESENTATION, false);
+        boolean isDataBindingEnabled = pm.getBoolean(MainActivity.KEY_TYPE_REPRESENTATION, false);
 
-        if(current) {
+        adapter = isDataBindingEnabled ? new DataBindingAdapter(FeedListFragment.this): new ItemAdapter(FeedListFragment.this, isGrid);
+        adapter.updateItems(model.items);
+        if(isGrid) {
             gridView.setNumColumns(getResources().getInteger(R.integer.items_per_row));
             gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
             gridView.setColumnWidth(100);

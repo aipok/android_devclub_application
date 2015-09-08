@@ -1,4 +1,4 @@
-package com.divapps.aipok.devclub;
+package com.divapps.aipok.devclub.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,12 +9,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.divapps.aipok.devclub.R;
 import com.divapps.aipok.devclub.fragments.FeedListFragment;
 
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String KEY_VIEW_REPRESENTATION = "key_ui";
+    public static final String KEY_TYPE_REPRESENTATION = "key_data_binding";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        final MenuItem menuItem = menu.findItem(R.id.action_select_view);
+        MenuItem menuItem = menu.findItem(R.id.action_select_view);
         if(getPresentedAsGrid()){
             menuItem.setTitle(getString(R.string.action_list));
             menuItem.setIcon(R.drawable.action_list);
@@ -47,6 +49,16 @@ public class MainActivity extends AppCompatActivity {
             menuItem.setTitle(getString(R.string.action_grid));
             menuItem.setIcon(R.drawable.action_grid);
         }
+
+        menuItem = menu.findItem(R.id.action_select_type);
+        if(getType()){
+            menuItem.setTitle(getString(R.string.action_list));
+            menuItem.setIcon(R.drawable.ic_action_data_binding_enabled);
+        }else {
+            menuItem.setTitle(getString(R.string.action_grid));
+            menuItem.setIcon(R.drawable.ic_action_data_binding_disabled);
+        }
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -74,6 +86,22 @@ public class MainActivity extends AppCompatActivity {
             FeedListFragment fragment = (FeedListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
             fragment.updateCollectionView();
             return true;
+        }else if (id == R.id.action_select_type){
+            boolean current = getType();
+            SharedPreferences pm = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = pm.edit();
+            editor.putBoolean(KEY_TYPE_REPRESENTATION, !current);
+            editor.apply();
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    supportInvalidateOptionsMenu();
+                }
+            });
+            FeedListFragment fragment = (FeedListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
+            fragment.updateCollectionView();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -82,5 +110,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean getPresentedAsGrid() {
         SharedPreferences pm = PreferenceManager.getDefaultSharedPreferences(this);
         return pm.getBoolean(KEY_VIEW_REPRESENTATION, false);
+    }
+
+    private boolean getType(){
+        SharedPreferences pm = PreferenceManager.getDefaultSharedPreferences(this);
+        return pm.getBoolean(KEY_TYPE_REPRESENTATION, false);
     }
 }

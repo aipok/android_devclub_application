@@ -25,7 +25,7 @@ public class ItemAdapter extends BaseItemAdapter {
 
     public ItemAdapter(FeedListFragment fragment, boolean isGrid) {
         super(fragment);
-        layout = isGrid ? R.layout.feed_item_grid: R.layout.feed_item;
+        layout = isGrid ? R.layout.feed_item_grid: R.layout.feed_item_base;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ItemAdapter extends BaseItemAdapter {
             holder.date = (TextView) convertView.findViewById(R.id.date);
             holder.image = (NetworkImageView) convertView.findViewById(R.id.image);
             holder.play = (ImageButton) convertView.findViewById(R.id.play);
-            holder.play.setOnClickListener((View.OnClickListener) fragment);
+            holder.play.setOnClickListener(fragment.onClickListener);
             holder.descriptionView = (TextView) convertView.findViewById(R.id.description);
             holder.separatorView = convertView.findViewById(R.id.separator);
             if(layout == R.layout.feed_item_grid){

@@ -3,11 +3,26 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="fragment"
+            type="com.divapps.aipok.devclub.fragments.FeedListFragment" />
+
+        <variable
+            name="item"
+            type="com.divapps.aipok.devclub.models.ItemModel" />
+    </data>
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         card_view:cardElevation="5dp"
-        card_view:cardMaxElevation="10dp" >
+        card_view:cardMaxElevation="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,8 +52,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:background="@android:color/transparent"
                         android:onClick="@{fragment.onClickListener}"
+                        android:background="@android:color/transparent"
                         android:src="@drawable/play" />
                 </FrameLayout>
 
@@ -55,12 +70,13 @@
                         android:layout_weight="1"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:padding="5dp"
                         android:text="@{item.title}"
                         android:visibility="@{TextUtils.isEmpty(item.title) ? View.GONE : View.VISIBLE}"
+                        android:padding="5dp"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"
-                        tools:text="The title of the article" />
+                        tools:text="The title of the article"
+                        tools:ignore="NestedWeights" />
 
                     <TextView
                         android:id="@+id/date"
@@ -89,9 +105,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
+                android:textColor="@android:color/black"
                 android:text="@{item.summary}"
                 android:visibility="@{TextUtils.isEmpty(item.summary) ? View.GONE : View.VISIBLE}"
-                android:textColor="@android:color/black"
                 android:textSize="14sp"
                 tools:text="When disaster strikes, who's first on the scene? More and more, it's a robot. In her lab, Robin Murphy builds robots that fly, tunnel, swim and crawl through disaster scenes, helping firefighters and rescue workers save more lives safely -- and help communities return to normal up to three years faster." />
 

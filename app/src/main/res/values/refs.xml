@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="layout" name="feed_item_base">@layout/feed_item_default</item>
+</resources>
