@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="collection_horizontal_padding">124dp</dimen>
-    <dimen name="collection_vertical_padding">20dp</dimen>
     <dimen name="collection_horizontal_padding_multi_rows">20dp</dimen>
+    <dimen name="collection_vertical_padding">20dp</dimen>
 </resources>

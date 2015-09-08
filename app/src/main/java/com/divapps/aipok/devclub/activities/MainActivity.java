@@ -1,17 +1,20 @@
-package com.divapps.aipok.devclub.activities;
+package com.divapps.aipok.devclub;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.divapps.aipok.devclub.R;
 import com.divapps.aipok.devclub.fragments.FeedListFragment;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String KEY_VIEW_REPRESENTATION = "key_ui";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,15 +24,30 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setLogo(R.drawable.top_logo);
 
         setSupportActionBar(toolbar);
-        final ActionBar ab = getSupportActionBar();
-        if(ab != null) ab.setTitle(null);
+        ActionBar ab = getSupportActionBar();
+        if(ab != null) {
+            ab.setTitle(null);
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        final MenuItem menuItem = menu.findItem(R.id.action_select_view);
+        if(getPresentedAsGrid()){
+            menuItem.setTitle(getString(R.string.action_list));
+            menuItem.setIcon(R.drawable.action_list);
+        }else {
+            menuItem.setTitle(getString(R.string.action_grid));
+            menuItem.setIcon(R.drawable.action_grid);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -40,12 +58,29 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_reload) {
+        if (id == R.id.action_select_view) {
+            boolean current = getPresentedAsGrid();
+            SharedPreferences pm = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = pm.edit();
+            editor.putBoolean(KEY_VIEW_REPRESENTATION, !current);
+            editor.apply();
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    supportInvalidateOptionsMenu();
+                }
+            });
             FeedListFragment fragment = (FeedListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
-            fragment.reloadFeeds();
+            fragment.updateCollectionView();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean getPresentedAsGrid() {
+        SharedPreferences pm = PreferenceManager.getDefaultSharedPreferences(this);
+        return pm.getBoolean(KEY_VIEW_REPRESENTATION, false);
     }
 }

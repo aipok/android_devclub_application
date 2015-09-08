@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">devclub.eu</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_reload">Update feeds</string>
+    <string name="action_list">List</string>
+    <string name="action_grid">Grid</string>
     <string name="loading_title">Please wait…</string>
     <string name="description" translatable="false" />
     <string name="device_type" translatable="false" >phone</string>

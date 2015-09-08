@@ -9,7 +9,8 @@
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        tools:background="@drawable/background"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -33,6 +34,7 @@
         android:scrollbarStyle="outsideOverlay"
         android:scrollbarThumbVertical="@drawable/scrollbar"
         android:visibility="visible"
+        android:horizontalSpacing="20dp"
         tools:listitem="@layout/feed_item" />
 
     </android.support.v4.widget.SwipeRefreshLayout>

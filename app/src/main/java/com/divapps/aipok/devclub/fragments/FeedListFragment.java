@@ -1,32 +1,31 @@
 package com.divapps.aipok.devclub.fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
 import com.divapps.aipok.devclub.R;
+import com.divapps.aipok.devclub.activities.MainActivity;
 import com.divapps.aipok.devclub.activities.Player;
+import com.divapps.aipok.devclub.adapters.BaseItemAdapter;
+import com.divapps.aipok.devclub.adapters.DataBindingAdapter;
+import com.divapps.aipok.devclub.adapters.ItemAdapter;
 import com.divapps.aipok.devclub.application.App;
-import com.divapps.aipok.devclub.databinding.FeedItemBinding;
 import com.divapps.aipok.devclub.models.FeedsResponseModel;
 import com.divapps.aipok.devclub.models.ItemModel;
 import com.divapps.aipok.devclub.network.FeedsRequest;
-import com.divapps.aipok.devclub.utils.ImageUtils;
 
 
 /**
@@ -40,7 +39,7 @@ public class FeedListFragment extends Fragment
     private static final int UNSELECTED = -1;
     private FeedsResponseModel model;
     private GridView gridView;
-    private ItemsAdapter adapter;
+    private BaseItemAdapter adapter;
     private int currentSelectedItem = UNSELECTED;
     private NetworkImageView backgroundView;
     private SwipeRefreshLayout swipeLayout;
@@ -75,7 +74,7 @@ public class FeedListFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v =inflater.inflate(R.layout.fragment_main, container, false);
         gridView = (GridView) v.findViewById(R.id.list);
-        adapter = new ItemsAdapter(getActivity());
+        adapter = new DataBindingAdapter(FeedListFragment.this);
         gridView.setAdapter(adapter);
         backgroundView = (NetworkImageView) v.findViewById(R.id.background);
         swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_container);
@@ -113,12 +112,11 @@ public class FeedListFragment extends Fragment
 
     private void updateUI(boolean success) {
         if(getView() != null) {
-
-            backgroundView.setImageUrl(model.coverImage, App.getLoader());
-
-            adapter.notifyDataSetChanged();
-            if (success)
+            if (success) {
+                adapter.updateItems(model.items);
+                backgroundView.setImageUrl(model.coverImage, App.getLoader());
                 gridView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -144,65 +142,26 @@ public class FeedListFragment extends Fragment
         }
     };
 
-    private class ItemsAdapter extends BaseAdapter{
+    public void updateCollectionView() {
+        SharedPreferences pm = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean current = pm.getBoolean(MainActivity.KEY_VIEW_REPRESENTATION, false);
+        adapter = new ItemAdapter(FeedListFragment.this, current);
 
-        private final LayoutInflater li;
-
-        public ItemsAdapter(Context context) {
-            li = LayoutInflater.from(context);
+        if(current) {
+            gridView.setNumColumns(getResources().getInteger(R.integer.items_per_row));
+            gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+            gridView.setColumnWidth(100);
+            int horizontalPadding = getResources().getDimensionPixelSize(R.dimen.collection_horizontal_padding_multi_rows);
+            int verticalPadding = getResources().getDimensionPixelSize(R.dimen.collection_vertical_padding);
+            gridView.setPadding(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding);
+        }else{
+            gridView.setNumColumns(1);
+            int horizontalPadding = getResources().getDimensionPixelSize(R.dimen.collection_horizontal_padding);
+            int verticalPadding = getResources().getDimensionPixelSize(R.dimen.collection_horizontal_padding);
+            gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+            gridView.setPadding(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding);
         }
-
-        @Override
-        public int getCount() {
-            return model != null ? model.items.size(): 0;
-        }
-
-        @Override
-        public ItemModel getItem(int position) {
-            try{
-                return model.items.get(position);
-            }catch (NullPointerException | ArrayIndexOutOfBoundsException e){
-                return null;
-            }
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final FeedItemBinding holder;
-            if(convertView == null) {
-                holder = FeedItemBinding.inflate(li, parent, false);
-                convertView = holder.getRoot();
-                convertView.setTag(holder);
-            }else
-                holder = (FeedItemBinding) convertView.getTag();
-
-            holder.play.setTag(position);
-            final ItemModel model = getItem(position);
-            holder.setItem(model);
-            holder.setFragment(FeedListFragment.this);
-            if(App.isPhone() && getResources().getConfiguration().orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
-                ImageUtils.Size size = ImageUtils.calculateSizeBasedOnWidthAndAspectRatio(convertView.getMeasuredWidth(), 615, 461);
-                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(size.getWidth(), size.getHeight());
-                holder.image.setLayoutParams(params);
-            }
-            if(model != null){
-                if(!TextUtils.isEmpty(model.getImageUrl())){
-                    holder.image.setImageUrl(model.getImageUrl(), App.getLoader());
-                }else{
-                    holder.image.setImageUrl(null, App.getLoader());
-                }
-            }
-            holder.separator.setVisibility(App.isTablet()
-                    && holder.title.getVisibility() == View.VISIBLE
-                    && holder.description.getVisibility() == View.VISIBLE
-                    ? View.VISIBLE: View.GONE);
-
-            return convertView;
-        }
+        gridView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 }
