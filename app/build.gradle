@@ -36,5 +36,5 @@ dependencies {
     compile 'com.android.support:support-annotations:23.0.1'
     compile 'com.mcxiaoke.volley:library:1.0.16'
     compile 'com.android.support:recyclerview-v7:23.0.1'
-    apt 'com.android.databinding:compiler:1.0-rc1'
+    apt 'com.android.databinding:compiler:1.0-rc2'
 }
