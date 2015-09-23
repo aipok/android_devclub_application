@@ -1,2 +1,2 @@
 # android_devclub_application
-Simple project that demonstare poweful mechanism of Android layout optimization.
+Simple project that demonstrate powerful mechanism of Android layout optimization.
